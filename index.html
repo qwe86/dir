@@ -1,0 +1,147 @@
+﻿<!DOCTYPE>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8">
+    <link href="Stylesheet1.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+    <title></title>
+</head>
+<body>
+    <script src="import.js"></script>
+    <script src="selection.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <script src="/socket.io/socket.io.js"></script>
+	<script>
+		function show(_div1,_div2) {
+		
+			var div1 = document.getElementById(_div1);
+			var div2 = document.getElementById(_div2);
+			div1.style.display="block";
+			div2.style.display="none";
+		}
+	</script>
+	
+    <script>
+        var socket = io.connect();
+
+        function osClick() {
+            socket.emit('clicked', "1");
+        }
+    </script>
+   
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">Регламентное обслуживание</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a name="btn3" class="nav-link" onClick="show('import','conf')" href="" >Импорт<span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item active">
+                    <a name="btn3" class="nav-link" onClick="show('conf','import')" href="" >Конфигурация<span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Dropdown
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="#">Action</a>
+                        <a class="dropdown-item" href="#">Another action</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="#">Something else here</a>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link disabled" href="#">Disabled</a>
+                </li>
+            </ul>
+            <form class="form-inline my-2 my-lg-0">
+                <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+            </form>
+        </div>
+    </nav>
+	
+    <div id="import" style="display:none;">
+    <div class="tab">
+        <button class="tablinks" onclick="openCity(event, 'London')">AS ABAP</button>
+        <button class="tablinks" onclick="openCity(event, 'Paris')">База данных</button>
+        <button class="tablinks" onclick="openCity(event, 'Tokyo')">Tokyo</button>
+    </div>
+
+    <div id="London" class="tabcontent">
+        <h3>Системы</h3>
+        <select class="form-control" id="systemOption" name="systemOption" onchange="selection()">
+            <option value="R3R">R3R</option>
+            <option value="ECP">ECP</option>
+            <option value="PHR">PHR</option>
+            <option value="PBW">PBW</option>
+        </select>
+        <br>
+        <h3>Инстанции</h3>
+        <select class="form-control" id="instanceOption" name="instanceOption">
+            <option value="di1R3R">di1R3R</option>
+            <option value="di2R3R">di2R3R</option>
+        </select>
+        <br>
+        <h3>Период</h3>
+        <script type="text/javascript">
+            $(function() {
+
+    var start = moment().subtract(29, 'days');
+    var end = moment();
+
+    function cb(start, end) {
+        $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+    }
+
+    $('#reportrange').daterangepicker({
+        startDate: start,
+        endDate: end,
+        ranges: {
+           'Сегодня': [moment(), moment()],
+           'Вчера': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+           'Последние 7 дней': [moment().subtract(6, 'days'), moment()],
+           'Последние 30 дней': [moment().subtract(29, 'days'), moment()],
+           'Текущий месяц': [moment().startOf('month'), moment().endOf('month')],
+           'Прошедший месяц': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+        }
+    }, cb);
+
+    cb(start, end);
+
+});
+        </script>
+        <div id="reportrange" style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc; width: 100%">
+            <i class="fa fa-calendar"></i>&nbsp;
+            <span></span> <i class="fa fa-caret-down"></i>
+        </div>
+        <br>
+        <button type="button" class="btn btn-primary" onclick="osClick()">ОК</button>
+    </div>
+    <div id="Paris" class="tabcontent">
+        <h3>База данных</h3>
+        <p>Paris is the capital of France.</p>
+    </div>
+
+    <div id="Tokyo" class="tabcontent">
+        <h3>Tokyo</h3>
+        <p>Tokyo is the capital of Japan.</p>
+    </div>
+ </div>
+ 
+ <div id="conf" style="display:none;"></div>
+ 
+</body>
+</html>
